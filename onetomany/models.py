@@ -6,7 +6,7 @@ class OneToManyField(models.ManyToManyField):
     the only difference is that an instance of the other side can only be 
     related to one instance of your side. Also see the test cases.
     """
-    def contribute_to_class(self, cls, name):
+    def contribute_to_class(self, cls, name, **kwargs):
         # Check if the intermediate model will be auto created.
         # The intermediate m2m model is not auto created if:
         #  1) There is a manually specified intermediate, or
@@ -15,7 +15,7 @@ class OneToManyField(models.ManyToManyField):
         auto_intermediate = not self.rel.through and not cls._meta.abstract and not cls._meta.swapped
 
         #One call super contribute_to_class and have django create the intermediate model.
-        super(OneToManyField, self).contribute_to_class(cls, name)
+        super(OneToManyField, self).contribute_to_class(cls, name, **kwargs)
 
         if auto_intermediate:
             #Set unique_together to the 'to' relationship, this ensures a OneToMany relationship.
